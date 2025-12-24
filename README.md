@@ -1,70 +1,60 @@
-# Getting Started with Create React App
+# 🌌 System With a Soul | Ishita Singh
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> *“I build intelligent systems that think — and feel.”*
 
-## Available Scripts
+Welcome to **System With a Soul**, my personal portfolio website that sits at the intersection of **AI/ML research**, **frontend engineering**, and **human-centered design**.  
+This space reflects how I think, build, and experiment — blending technical depth with thoughtful UI/UX.
 
-In the project directory, you can run:
+🔗 **Live Portfolio:** https://systemwithasoul.vercel.app/
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🌟 Key Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 🌗 Dual Mode Engine
+Toggle between two thoughtfully designed modes:
+- **Soft Mode** → Calm, reflective UI with lavender tones  
+- **Hacker Mode** → Dark, terminal-inspired UI with cyan accents  
 
-### `npm test`
+### 🤖 AI Assistant
+A built-in portfolio AI assistant that:
+- Explains my projects and skills  
+- Adapts responses for recruiters, engineers, or founders  
+- Offers a guided “portfolio tour”  
+<img align="right" src="https://raw.githubusercontent.com/Ishita-Si/Ishita-Si/main/assets/cat.png" width="300"/>
+### 🐾 Cat-Inspired Customizations
+- Custom **cat paw cursor** with subtle trailing effects  
+- Gentle micro-interactions inspired by curiosity and play  
+- Hidden easter eggs (because cats 🐱)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### ✨ Interactive & Modern UI
+- Responsive, fluid layout  
+- Glassmorphism-inspired components  
+- Smooth, subtle animations using Framer Motion concepts  
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🛠️ Tech Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Frontend Engineering
+- **React.js** (Vite)
+- **Tailwind CSS**
+- **Lucide React** (Icons)
+- **Framer Motion** (Animations)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### AI, ML & Data Science (Featured Projects)
+- **Languages:** Python, C++, SQL
+- **Core AI:** Deep Learning, NLP, LLMs, Computer Vision, Generative AI
+- **Frameworks & Tools:** PyTorch, TensorFlow, LangChain, OpenAI Whisper, Gemini API
+- **Data & Visualization:** Pandas, NumPy, Plotly, Streamlit, ChromaDB
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🚀 Getting Started
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+To run this portfolio locally:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/Ishita-Si/ishita-portfolio.git
+cd ishita-portfolio
