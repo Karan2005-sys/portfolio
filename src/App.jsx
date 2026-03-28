@@ -1,930 +1,405 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Github,
   Linkedin,
-  Instagram,
-  Terminal,
-  Send,
-  X,
-  MessageSquare,
-  ExternalLink,
-  ChevronRight,
-  Sparkles,
-  MapPin,
   Mail,
-  Award,
-  Brain,
-  Cat,
+  Phone,
+  MapPin,
+  Code,
+  Cpu,
   Database,
-  Layout,
-  Layers,
-  Code2,
-  Wrench,
-  BarChart,
   Globe,
-  ArrowRight,
-  GraduationCap
+  Award,
+  Briefcase,
+  GraduationCap,
+  ChevronRight,
+  Terminal
 } from 'lucide-react';
 
-/* =========================================
-   ASSETS & CONFIG
-   ========================================= */
+export default function App() {
+  const [activeSection, setActiveSection] = useState('home');
 
-// Custom LeetCode Icon
-const LeetCodeIcon = ({ size = 22, className }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-4.279-4.19a3.154 3.154 0 0 1-.673-3.13 3.148 3.148 0 0 1 1.085-1.578l3.698-3.958 4.606-4.925a3.047 3.047 0 0 1 4.229-.025l2.428 2.422a1.376 1.376 0 0 0 1.951.003c.54-.54.54-1.414-.003-1.955l-2.428-2.422A5.793 5.793 0 0 0 13.483 0zM5.294 11.234c-.11.002-.224.015-.333.042a1.413 1.413 0 0 0-.847 1.887l3.053 7.828c.205.524.71.868 1.273.868.563 0 1.068-.344 1.273-.868l3.053-7.828a1.413 1.413 0 0 0-1.025-1.905c-.109-.027-.223-.04-.333-.042a1.374 1.374 0 0 0-1.282.884l-1.686 4.322-1.686-4.322a1.375 1.375 0 0 0-1.46-1.066z" />
-  </svg>
-);
+  const scrollTo = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(id);
+    }
+  };
 
-// Custom Paw Icon for Cursor Trail
-const PawIcon = ({ size = 12, className, style }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className={className}
-    style={style}
-  >
-    <path d="M12 2C10.9 2 10 2.9 10 4C10 5.1 10.9 6 12 6C13.1 6 14 5.1 14 4C14 2.9 13.1 2 12 2ZM8 5C6.9 5 6 5.9 6 7C6 8.1 6.9 9 8 9C9.1 9 10 8.1 10 7C10 5.9 9.1 5 8 5ZM16 5C14.9 5 14 5.9 14 7C14 8.1 14.9 9 16 9C17.1 9 18 8.1 18 7C18 5.9 17.1 5 16 5ZM7.5 11C6.1 11 5 12.1 5 13.5C5 14.3 5.4 15.1 6 15.6V18C6 19.7 7.3 21 9 21H15C16.7 21 18 19.7 18 18V15.6C18.6 15.1 19 14.3 19 13.5C19 12.1 17.9 11 16.5 11C15.8 11 15.2 11.3 14.8 11.8C14 11.3 13 11 12 11C11 11 10 11.3 9.2 11.8C8.8 11.3 8.2 11 7.5 11Z" />
-  </svg>
-);
-
-const PORTFOLIO_DATA = {
-  name: "Ishita Singh",
-  bio: "I build intelligent systems that think — and feel.",
-  about: "I am a Dual Degree (B.Tech + M.Tech) student in CS & AI at RGIPT. My work bridges the gap between rigorous ML research and intuitive frontend experiences.",
-  projects: {
-    sanraksha: "SanRaksha is an award-winning health monitoring dashboard. It uses OpenAI Whisper and ML models to extract vitals from audio and predict health risks. It won the CS BASE HackforHealth.",
-    email: "The AI Cold Email Generator uses LangChain, ChromaDB, and Groq LLMs to parse resumes and generate context-aware emails for job applications.",
-    climate: "A Global Climate Change Dashboard using Streamlit and ARIMA models to visualize CO2 levels and forecast future trends.",
-    gemini: "A functional clone of the Gemini interface built with React and the Gemini API, focusing on natural language interaction."
-  },
-  skills: "My core stack includes Python, C++, React.js, and PyTorch. I specialize in NLP, Large Language Models (RAG, Agents), Computer Vision, and Generative AI.",
-  contact: "You can reach me via LinkedIn or check my code on GitHub. I'm always open to discussing AI systems and frontend engineering."
-};
-
-const SOCIAL_LINKS = {
-  linkedin: "https://www.linkedin.com/in/ishita-singh09/",
-  github: "https://github.com/Ishita-Si",
-  instagram: "https://www.instagram.com/i_shhh09",
-  leetcode: "https://leetcode.com/u/Ishita_Si/"
-};
-
-/* =========================================
-   COMPONENTS
-   ========================================= */
-
-const CustomCursor = ({ mood }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [clicked, setClicked] = useState(false);
-  const [hovering, setHovering] = useState(false);
-  const [trail, setTrail] = useState([]);
-
-  useEffect(() => {
-    const addEventListeners = () => {
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mousedown", onMouseDown);
-      document.addEventListener("mouseup", onMouseUp);
-
-      const clickables = document.querySelectorAll('a, button, .clickable');
-      clickables.forEach(el => {
-        el.addEventListener('mouseenter', () => setHovering(true));
-        el.addEventListener('mouseleave', () => setHovering(false));
-      });
-    };
-
-    const removeEventListeners = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mousedown", onMouseDown);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
-
-    const onMouseMove = (e) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-
-      // Add point to trail more frequently for smooth paw path
-      const newPoint = {
-        x: e.clientX,
-        y: e.clientY,
-        id: Date.now(),
-        rotation: Math.random() * 30 - 15 // Slight random rotation for paws
-      };
-      setTrail(prev => [...prev.slice(-12), newPoint]); // Keep last 12 points
-    };
-
-    const onMouseDown = () => setClicked(true);
-    const onMouseUp = () => setClicked(false);
-
-    addEventListeners();
-    return () => removeEventListeners();
-  }, []);
-
-  // Cleanup trail points to create fading effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTrail(prev => prev.filter(p => Date.now() - p.id < 600));
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
+  const navLinks = [
+    { name: 'Home', id: 'home' },
+    { name: 'Skills', id: 'skills' },
+    { name: 'Projects', id: 'projects' },
+    { name: 'Education', id: 'timeline' },
+    { name: 'Achievements', id: 'achievements' }
+  ];
 
   return (
-    <>
-      {/* Paw Trail */}
-      <div className="fixed inset-0 pointer-events-none z-[9998] hidden md:block">
-        {trail.map((point, i) => {
-           const age = Date.now() - point.id;
-           const life = 1 - age / 600; // 1 to 0
+    <div className="min-h-screen bg-[#0B1120] text-slate-300 font-sans selection:bg-emerald-500/30 relative">
 
-           return (
-             <div
-               key={point.id}
-               className="absolute transition-opacity duration-100 ease-linear"
-               style={{
-                 left: point.x,
-                 top: point.y,
-                 opacity: life * 0.5,
-                 transform: `translate(-50%, -50%) rotate(${point.rotation}deg) scale(${life * 0.8})`,
-                 color: mood === 'hacker' ? '#7EE7E7' : '#B8A1FF'
-               }}
-             >
-               <PawIcon size={16} />
-             </div>
-           );
-        })}
-      </div>
-
-      {/* Main Cursor (The Big Paw) */}
+      {/* Circuit Board Background Pattern */}
       <div
-        className="fixed pointer-events-none z-[9999] hidden md:block transition-transform duration-100 ease-out"
+        className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
         style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          // Added rotation for the cute tilt effect
-          transform: `translate(-50%, -50%) rotate(-20deg) scale(${clicked ? 0.8 : hovering ? 1.3 : 1})`
+          backgroundImage: 'linear-gradient(#10b981 1px, transparent 1px), linear-gradient(90deg, #10b981 1px, transparent 1px)',
+          backgroundSize: '40px 40px'
         }}
-      >
-        <div className={`relative ${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'} opacity-90 drop-shadow-sm`}>
-           <PawIcon size={32} />
-        </div>
-      </div>
-    </>
-  );
-};
-
-const AIAssistant = ({ mood }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'assistant', text: "Hello! I'm Ishita's digital echo. Ask me about her projects like 'SanRaksha', her skills, or just say 'Take a tour'." }
-  ]);
-  const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const chatEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(scrollToBottom, [messages]);
-
-  const processQuery = (query) => {
-    const q = query.toLowerCase();
-
-    if (q.includes('tour') || q.includes('start')) return "Ishita is a dual-degree student at RGIPT specializing in AI & Frontend. Scroll down to see her award-winning project 'SanRaksha', her AI experiments, and her research work.";
-    if (q.includes('sanraksha') || q.includes('health')) return PORTFOLIO_DATA.projects.sanraksha;
-    if (q.includes('email') || q.includes('cold')) return PORTFOLIO_DATA.projects.email;
-    if (q.includes('climate')) return PORTFOLIO_DATA.projects.climate;
-    if (q.includes('gemini')) return PORTFOLIO_DATA.projects.gemini;
-    if (q.includes('skill') || q.includes('stack') || q.includes('tech')) return PORTFOLIO_DATA.skills;
-    if (q.includes('contact') || q.includes('reach') || q.includes('email')) return PORTFOLIO_DATA.contact;
-    if (q.includes('cat') || q.includes('kitten')) return "Ishita loves cats! That's why you see the paw cursor and subtle cat themes here. 🐱";
-
-    return "I can explain Ishita's projects (like SanRaksha), her ML tech stack, or her background. What would you like to know?";
-  };
-
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    const userMsg = input;
-    setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
-    setInput('');
-    setIsTyping(true);
-
-    setTimeout(() => {
-      const response = processQuery(userMsg);
-      setMessages(prev => [...prev, { role: 'assistant', text: response }]);
-      setIsTyping(false);
-    }, 1000);
-  };
-
-  return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {isOpen && (
-        <div className={`
-          mb-4 w-80 md:w-96 rounded-2xl shadow-2xl overflow-hidden border transition-colors duration-500
-          ${mood === 'hacker' 
-            ? 'bg-[#0E0E11]/90 border-[#7EE7E7] text-[#7EE7E7] font-mono' 
-            : 'bg-white/80 border-[#B8A1FF]/40 text-gray-800 font-sans backdrop-blur-xl'}
-        `}>
-          <div className={`p-4 flex justify-between items-center border-b ${mood === 'hacker' ? 'border-[#7EE7E7]/30' : 'border-gray-200/50'}`}>
-            <div className="flex items-center gap-2">
-              <Sparkles size={16} className={mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'} />
-              <span className="font-semibold text-sm">Portfolio Assistant</span>
-            </div>
-            <button onClick={() => setIsOpen(false)} className="hover:opacity-70 clickable"><X size={16} /></button>
-          </div>
-
-          <div className="h-64 overflow-y-auto p-4 space-y-3">
-            {messages.map((msg, idx) => (
-              <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`
-                  max-w-[85%] rounded-2xl px-4 py-2 text-sm leading-relaxed shadow-sm
-                  ${msg.role === 'user' 
-                    ? (mood === 'hacker' ? 'bg-[#7EE7E7] text-black' : 'bg-[#8B5CF6] text-white') 
-                    : (mood === 'hacker' ? 'bg-[#121826] border border-[#7EE7E7]/30' : 'bg-white border border-gray-100')}
-                `}>
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-            {isTyping && (
-              <div className="flex justify-start">
-                <div className="bg-opacity-20 rounded-full px-3 py-1 flex gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-bounce"></span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-bounce delay-75"></span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-bounce delay-150"></span>
-                </div>
-              </div>
-            )}
-            <div ref={chatEndRef} />
-          </div>
-
-          <form onSubmit={handleSend} className={`p-3 border-t flex gap-2 ${mood === 'hacker' ? 'border-[#7EE7E7]/30' : 'border-gray-200/50'}`}>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about my projects..."
-              className={`flex-1 bg-transparent text-sm outline-none ${mood === 'hacker' ? 'placeholder-[#7EE7E7]/50' : 'placeholder-gray-400'}`}
-            />
-            <button type="submit" className="p-2 rounded-full hover:bg-gray-200/20 clickable"><Send size={16} /></button>
-          </form>
-        </div>
-      )}
-
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`
-          p-4 rounded-full shadow-lg transition-all duration-300 clickable hover:scale-110
-          ${mood === 'hacker' 
-            ? 'bg-[#0E0E11] text-[#7EE7E7] border border-[#7EE7E7] shadow-[0_0_15px_rgba(126,231,231,0.3)]' 
-            : 'bg-[#8B5CF6] text-white shadow-xl shadow-[#8B5CF6]/30'}
-        `}
-      >
-        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
-      </button>
-    </div>
-  );
-};
-
-const ProjectCard = ({ project, mood }) => (
-  <div className={`
-    group relative p-6 rounded-3xl transition-all duration-500 clickable flex flex-col h-full
-    hover:-translate-y-2 hover:scale-[1.01] 
-    ${mood === 'hacker' 
-      ? 'bg-[#121826] border border-[#7EE7E7]/20 hover:border-[#7EE7E7] hover:shadow-[0_0_20px_rgba(126,231,231,0.1)]' 
-      : 'bg-white border border-gray-100 hover:border-[#B8A1FF]/50 hover:shadow-2xl shadow-sm'}
-  `}>
-    <div className="flex justify-between items-start mb-4">
-      <h3 className={`text-xl font-bold ${mood === 'hacker' ? 'font-mono' : 'font-display text-gray-800'}`}>{project.title}</h3>
-      <div className="flex gap-2">
-        {project.links.map((link, i) => (
-          <a key={i} href={link.url} target="_blank" rel="noreferrer" className={`opacity-70 hover:opacity-100 transition-opacity ${mood === 'hacker' ? 'text-white' : 'text-gray-600'}`}>
-            <ExternalLink size={18} />
-          </a>
-        ))}
-      </div>
-    </div>
-
-    <p className={`mb-6 text-sm leading-relaxed flex-grow ${mood === 'hacker' ? 'text-gray-400' : 'text-gray-600'}`}>
-      {project.description}
-    </p>
-
-    <div className="mb-4">
-      <div className="flex flex-wrap gap-2">
-        {project.stack.map((tech, i) => (
-          <span key={i} className={`
-            text-xs px-2.5 py-1 rounded-full font-medium
-            ${mood === 'hacker' ? 'bg-[#7EE7E7]/10 text-[#7EE7E7]' : 'bg-[#F3E8FF] text-[#7C3AED]'}
-          `}>
-            {tech}
-          </span>
-        ))}
-      </div>
-    </div>
-
-    {project.awards && (
-      <div className={`
-        mt-auto pt-4 border-t text-sm flex items-center gap-2
-        ${mood === 'hacker' ? 'border-[#7EE7E7]/20 text-[#7EE7E7]' : 'border-gray-100 text-[#8B5CF6]'}
-      `}>
-        <Award size={16} />
-        <span className="font-semibold">{project.awards}</span>
-      </div>
-    )}
-
-    <div className={`absolute bottom-3 right-5 opacity-0 group-hover:opacity-40 transition-opacity duration-700 text-xs ${mood === 'hacker' ? 'font-mono' : 'italic text-[#8B5CF6]'}`}>
-      ~ stretches ~
-    </div>
-  </div>
-);
-
-const SkillCard = ({ title, icon: Icon, skills, mood }) => (
-  <div className={`
-    p-6 rounded-2xl h-full transition-all duration-300 flex flex-col
-    ${mood === 'hacker' 
-      ? 'bg-[#121826] border border-[#7EE7E7]/20' 
-      : 'bg-white border border-gray-100 shadow-lg shadow-gray-100/50 hover:shadow-xl hover:shadow-[#F3E8FF]/50'}
-  `}>
-    <div className="flex items-center gap-3 mb-6">
-      <div className={`
-        p-2.5 rounded-xl
-        ${mood === 'hacker' ? 'bg-[#7EE7E7]/10 text-[#7EE7E7]' : 'bg-[#F3E8FF] text-[#8B5CF6]'}
-      `}>
-        <Icon size={20} />
-      </div>
-      <h3 className={`text-lg font-bold ${mood === 'hacker' ? 'text-gray-200' : 'text-gray-800'}`}>{title}</h3>
-    </div>
-
-    <div className="flex flex-wrap gap-2 content-start">
-      {skills.map((skill) => (
-        <span
-          key={skill}
-          className={`
-            px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 cursor-default
-            ${mood === 'hacker' 
-              ? 'bg-[#0E0E11] text-[#7EE7E7]/80 hover:bg-[#7EE7E7]/10' 
-              : 'bg-gray-50 text-gray-600 hover:bg-[#8B5CF6] hover:text-white hover:shadow-md'}
-          `}
-        >
-          {skill}
-        </span>
-      ))}
-    </div>
-  </div>
-);
-
-const Section = ({ title, children, id, mood }) => (
-  <section id={id} className="py-24 relative">
-    <div className="container mx-auto px-6 md:px-12 relative z-10">
-      {title && (
-        <div className="mb-16">
-          <div className={`flex items-center gap-4 mb-2 opacity-60 font-mono text-sm ${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'}`}>
-            <span>0{['hero', 'about', 'projects', 'skills', 'education', 'experience', 'awards'].indexOf(id)}.</span>
-            <span className="h-px w-12 bg-current"></span>
-          </div>
-          <h2 className={`
-            text-3xl md:text-5xl font-bold tracking-tight
-            ${mood === 'hacker' ? 'text-[#EAEAF0]' : 'text-gray-900'}
-          `}>
-            {title}
-          </h2>
-        </div>
-      )}
-      {children}
-    </div>
-  </section>
-);
-
-const App = () => {
-  const [mood, setMood] = useState('soft');
-
-  const toggleMood = () => setMood(prev => prev === 'soft' ? 'hacker' : 'soft');
-  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-
-  return (
-    <div className={`
-      min-h-screen transition-colors duration-700 ease-in-out selection:bg-[#B8A1FF] selection:text-white relative overflow-x-hidden
-      ${mood === 'hacker' 
-        ? 'bg-[#050505] text-gray-300 font-mono selection:bg-[#7EE7E7] selection:text-black' 
-        : 'bg-[#FDFCFE] text-slate-600 font-sans selection:bg-[#8B5CF6] selection:text-white'}
-    `}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=General+Sans:wght@400;500;600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Sora:wght@400;600;700&display=swap');
-        .font-display { font-family: 'Sora', sans-serif; }
-        .glass-nav { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-        .animate-glow { animation: glow 4s ease-in-out infinite; }
-        @keyframes glow { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
-      `}</style>
-
-      {/* Cat Background Theme (Watermark) */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Giant subtle paw print in bottom left */}
-        <div className={`
-          absolute -bottom-20 -left-20 opacity-[0.03] transform rotate-12 transition-all duration-700
-          ${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'}
-        `}>
-          <PawIcon size={600} />
-        </div>
-        {/* Another one top right */}
-        <div className={`
-          absolute -top-20 -right-20 opacity-[0.02] transform -rotate-12 transition-all duration-700
-          ${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#EC4899]'}
-        `}>
-          <PawIcon size={500} />
-        </div>
-      </div>
-
-      <CustomCursor mood={mood} />
-      <AIAssistant mood={mood} />
+      />
 
       {/* Navigation */}
-      <nav className={`
-        fixed top-0 w-full z-40 border-b transition-all duration-500 glass-nav
-        ${mood === 'hacker' ? 'bg-[#050505]/80 border-[#7EE7E7]/20' : 'bg-white/80 border-gray-100'}
-      `}>
-        <div className="container mx-auto px-6 h-20 flex justify-between items-center">
-          <div
-            onClick={() => scrollTo('hero')}
-            className={`text-xl font-bold tracking-tight cursor-pointer clickable ${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-gray-900'}`}
-          >
-            It's<span className={mood === 'hacker' ? 'text-white' : 'text-[#8B5CF6]'}>.ISHITA</span>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <div className={`hidden md:flex gap-8 text-sm font-medium ${mood === 'hacker' ? 'text-gray-400' : 'text-gray-500'}`}>
-              {['About', 'Projects', 'Skills', 'Education', 'Experience'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollTo(item.toLowerCase())}
-                  className={`hover:scale-105 transition-all clickable ${mood === 'hacker' ? 'hover:text-[#7EE7E7]' : 'hover:text-[#8B5CF6]'}`}
-                >
-                  {item}
-                </button>
-              ))}
+      <nav className="fixed top-0 w-full z-50 bg-[#0B1120]/80 backdrop-blur-md border-b border-emerald-900/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-2 flex-shrink-0 font-bold text-xl tracking-tighter text-emerald-400">
+              <Cpu className="w-6 h-6" />
+              <span>KPS<span className="text-amber-500">.</span>SYS</span>
             </div>
-
-            <button
-              onClick={toggleMood}
-              className={`
-                p-2.5 rounded-full transition-all duration-300 clickable
-                ${mood === 'hacker' 
-                  ? 'bg-[#7EE7E7]/10 text-[#7EE7E7] hover:bg-[#7EE7E7]/20' 
-                  : 'bg-gray-100 text-[#8B5CF6] hover:bg-[#F3E8FF]'}
-              `}
-            >
-              {mood === 'hacker' ? <Terminal size={18} /> : <Cat size={18} />}
-            </button>
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-8">
+                {navLinks.map((link) => (
+                  <button
+                    key={link.id}
+                    onClick={() => scrollTo(link.id)}
+                    className="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors"
+                  >
+                    {link.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <header id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-36">
-        {/* Background Decorative Elements */}
-        <div className={`absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[100px] opacity-20 animate-pulse ${mood === 'hacker' ? 'bg-[#7EE7E7]' : 'bg-[#B8A1FF]'}`}></div>
-        <div className={`absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] opacity-10 ${mood === 'hacker' ? 'bg-[#0E0E11]' : 'bg-[#7EE7E7]'}`}></div>
+      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
 
-        {/* Floating shapes for light mode */}
-        {mood === 'soft' && (
-           <>
-             <div className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-[#B8A1FF] opacity-40 animate-float" style={{animationDelay: '1s'}}></div>
-             <div className="absolute bottom-1/3 right-1/4 w-6 h-6 rounded-full bg-[#7EE7E7] opacity-30 animate-float" style={{animationDelay: '2s'}}></div>
-           </>
-        )}
+        {/* Hero Section */}
+        <section id="home" className="py-20 flex flex-col-reverse md:flex-row items-center justify-between min-h-[80vh] gap-12">
 
-        <div className="container mx-auto px-6 text-center z-10">
-          <div className="inline-block mb-8 relative group clickable animate-float">
-            <div className={`
-              w-32 h-32 md:w-44 md:h-44 rounded-full p-1.5 mx-auto relative transition-all duration-500
-              ${mood === 'hacker' 
-                ? 'bg-gradient-to-r from-[#7EE7E7] to-transparent shadow-[0_0_30px_rgba(126,231,231,0.2)]' 
-                : 'bg-gradient-to-tr from-[#B8A1FF] to-[#7EE7E7] shadow-[0_10px_40px_rgba(184,161,255,0.4)]'}
-            `}>
+          {/* Text Content */}
+          <div className="flex-1 flex flex-col items-start">
+            <div className="flex items-center space-x-2 text-emerald-400 font-mono mb-4 bg-emerald-950/50 px-3 py-1 rounded-md border border-emerald-800/50">
+              <Terminal className="w-4 h-4" />
+              <span>System Initialized...</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold text-slate-100 mb-4 tracking-tight">
+              Karan Pratap Singh.
+            </h1>
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-400 mb-6 tracking-tight">
+              I build <span className="text-emerald-500">hardware</span> & IoT solutions.
+            </h2>
+            <p className="max-w-xl text-lg text-slate-400 mb-10 leading-relaxed">
+              I'm an Electronics Engineering student at Rajiv Gandhi Institute of Petroleum Technology.
+              I specialize in embedded systems, PCB design, and bridging the gap between physical hardware and digital networks.
+            </p>
+
+            <div className="flex flex-wrap gap-4 mb-12">
+              <a href="mailto:karanpratap298@gmail.com" className="flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-md transition-colors shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)]">
+                <Mail className="w-4 h-4 mr-2" />
+                Initialize Contact
+              </a>
+              <a href="https://github.com/Karan2005-sys" target="_blank" rel="noreferrer" className="flex items-center px-6 py-3 bg-slate-900 hover:bg-slate-800 text-emerald-400 font-medium rounded-md transition-colors border border-emerald-900/50">
+                <Github className="w-4 h-4 mr-2" />
+                GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/karan-pratap-singh-065508288/" target="_blank" rel="noreferrer" className="flex items-center px-6 py-3 bg-slate-900 hover:bg-slate-800 text-emerald-400 font-medium rounded-md transition-colors border border-emerald-900/50">
+                <Linkedin className="w-4 h-4 mr-2" />
+                LinkedIn
+              </a>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm font-mono text-slate-500">
+              <div className="flex items-center"><Phone className="w-4 h-4 mr-2 text-amber-500"/> +91-9682005764</div>
+              <div className="flex items-center"><MapPin className="w-4 h-4 mr-2 text-amber-500"/> Jais, UP</div>
+            </div>
+          </div>
+
+          {/* High-Tech Profile Photo Border */}
+          <div className="relative group w-64 h-64 md:w-80 md:h-80 flex-shrink-0 mt-8 md:mt-0">
+            {/* Outer dashed spinning traces */}
+            <div className="absolute -inset-6 border-2 border-emerald-500/30 rounded-full border-dashed animate-[spin_20s_linear_infinite]" />
+            <div className="absolute -inset-10 border border-amber-500/20 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
+
+            {/* Core Glow Component */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500 via-[#0B1120] to-amber-500 rounded-full blur-md opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+
+            {/* Inner Image Frame */}
+            <div className="absolute inset-1 bg-[#0B1120] rounded-full z-10 p-2 border-2 border-slate-800 shadow-inner">
+              {/* Replace the src below with your actual photo URL */}
               <img
-                src="src/professional .jpeg"
-                alt="Ishita Singh"
-                className={`w-full h-full object-cover rounded-full border-4 ${mood === 'hacker' ? 'border-[#0E0E11]' : 'border-white'}`}
-                onError={(e) => { e.target.onerror = null; e.target.src = "https://ui-avatars.com/api/?name=Ishita+Singh&background=0D8ABC&color=fff"; }}
+                src="/k.jpeg"
+                alt="Karan Pratap Singh"
+                className="w-full h-full object-cover rounded-full hover:grayscale-0 transition-all duration-500"
               />
             </div>
-            <span className="absolute -right-8 top-4 text-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 rotate-12 scale-110">🐱</span>
+
+            {/* IC Chip Nodes / Solder Pads */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-emerald-500 rounded-sm z-20 shadow-[0_0_10px_#10b981] flex items-center justify-center"><div className="w-1.5 h-1.5 bg-white rounded-full"></div></div>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-emerald-500 rounded-sm z-20 shadow-[0_0_10px_#10b981] flex items-center justify-center"><div className="w-1.5 h-1.5 bg-white rounded-full"></div></div>
+            <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-amber-500 rounded-sm z-20 shadow-[0_0_10px_#f59e0b] flex items-center justify-center"><div className="w-1.5 h-1.5 bg-[#0B1120] rounded-full"></div></div>
+            <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-amber-500 rounded-sm z-20 shadow-[0_0_10px_#f59e0b] flex items-center justify-center"><div className="w-1.5 h-1.5 bg-[#0B1120] rounded-full"></div></div>
+          </div>
+        </section>
+
+        {/* Skills Section */}
+        <section id="skills" className="py-20 border-t border-slate-800/50 relative">
+          <div className="flex items-center mb-12">
+            <h2 className="text-3xl font-bold text-slate-100 mr-4 font-mono">{'<'}Technical_Arsenal/{'>'}</h2>
+            <div className="flex-grow h-px bg-gradient-to-r from-emerald-900 to-transparent"></div>
           </div>
 
-          <h1 className={`
-            text-5xl md:text-7xl lg:text-8xl font-bold mb-8 tracking-tight leading-[1.1]
-            ${mood === 'hacker' ? 'font-mono' : 'font-display text-gray-900'}
-          `}>
-            System With a <br className="md:hidden" />
-            <span className={`
-              inline-block bg-clip-text text-transparent bg-gradient-to-r 
-              ${mood === 'hacker' ? 'from-[#7EE7E7] to-green-400' : 'from-[#8B5CF6] via-[#EC4899] to-[#8B5CF6]'} 
-              animate-glow
-            `}>
-              Soul
-            </span>
-          </h1>
-
-          <p className={`
-            text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed
-            ${mood === 'hacker' ? 'text-gray-400' : 'text-gray-500'}
-          `}>
-            I build intelligent systems that think — and feel. <br className="hidden md:block"/>
-            AI Researcher & Frontend Engineer bridging <span className={`font-semibold ${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'}`}>Logic</span> and <span className={`font-semibold ${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#EC4899]'}`}>Emotion</span>.
-          </p>
-
-          <div className="flex flex-col md:flex-row justify-center gap-4 items-center mb-24">
-            <button
-              onClick={() => scrollTo('projects')}
-              className={`
-                px-8 py-3.5 rounded-full font-medium transition-all duration-300 clickable flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1
-                ${mood === 'hacker' 
-                  ? 'bg-[#7EE7E7] text-black hover:bg-[#5CDCDC]' 
-                  : 'bg-[#8B5CF6] text-white hover:bg-[#7C3AED] shadow-[#8B5CF6]/30'}
-              `}
-            >
-              See My Work <ChevronRight size={18} />
-            </button>
-            <div className="flex gap-5 items-center px-6">
-              {Object.entries(SOCIAL_LINKS).map(([key, url]) => (
-                <a
-                  key={key}
-                  href={url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`
-                    transition-all transform hover:-translate-y-1 clickable
-                    ${mood === 'hacker' ? 'text-gray-500 hover:text-[#7EE7E7]' : 'text-gray-400 hover:text-[#8B5CF6]'}
-                  `}
-                >
-                  {key === 'linkedin' && <Linkedin size={22} />}
-                  {key === 'github' && <Github size={22} />}
-                  {key === 'instagram' && <Instagram size={22} />}
-                  {key === 'leetcode' && <LeetCodeIcon size={22} />}
-                </a>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <SkillCard
+              icon={<Cpu className="w-6 h-6 text-emerald-400" />}
+              title="IoT & Embedded"
+              skills={['Arduino/ESP32', 'Sensor Interfacing', 'Relay Control', 'RFID Systems', 'UART/I2C']}
+            />
+            <SkillCard
+              icon={<Code className="w-6 h-6 text-amber-400" />}
+              title="Programming"
+              skills={['C++', 'Python', 'Embedded C', 'JavaScript']}
+            />
+            <SkillCard
+              icon={<Briefcase className="w-6 h-6 text-emerald-400" />}
+              title="Tools & OS"
+              skills={['KiCad', 'Arduino IDE', 'VS Code', 'Linux', 'Windows', 'Docker']}
+            />
+            <SkillCard
+              icon={<Globe className="w-6 h-6 text-amber-400" />}
+              title="Web & Frameworks"
+              skills={['ReactJS', 'TailwindCSS', 'HTML/CSS/JS', 'OpenCV', 'NumPy']}
+            />
+            <SkillCard
+              icon={<Database className="w-6 h-6 text-emerald-400" />}
+              title="Data & Dashboarding"
+              skills={['Firebase', 'ThingSpeak', 'REST APIs', 'Real-time Dashboards']}
+            />
+            <SkillCard
+              icon={<GraduationCap className="w-6 h-6 text-amber-400" />}
+              title="Core Concepts"
+              skills={['Digital Electronics', 'Analog Circuits', 'Signals & Systems', 'Microcontrollers', 'Computer Architecture']}
+            />
           </div>
-        </div>
+        </section>
 
-        {/* Scroll Indicator */}
-        <div className={`absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce opacity-40 ${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'}`}>
-           <span className="text-xs tracking-widest uppercase mb-2 block text-center">Scroll</span>
-           <div className={`w-0.5 h-12 mx-auto ${mood === 'hacker' ? 'bg-[#7EE7E7]' : 'bg-[#8B5CF6]'}`}></div>
-        </div>
-      </header>
-
-      {/* About Section */}
-      <Section id="about" title="How I Think" mood={mood}>
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div className="space-y-6 text-lg leading-relaxed">
-            <p>
-              Technology without intuition is just code. I approach problems with a <span className={`${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'} font-semibold`}>Research Mindset</span> and a <span className={`${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#EC4899]'} font-semibold`}>Product Heart</span>.
-            </p>
-            <p className="opacity-80">
-              Currently pursuing my Integrated Dual Degree at <strong className={mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-gray-900'}>RGIPT (2024-2029)</strong>, I focus on healthcare AI, automation, and human-centered systems.
-            </p>
-            <p className="opacity-80">
-              I don't just train models; I design the conversations we have with them. Whether it's detecting health risks through audio or creating empathetic UI, my goal is to make machines understand us better.
-            </p>
-
-            <div className={`p-6 rounded-2xl border flex items-center gap-4 w-fit ${mood === 'hacker' ? 'border-[#7EE7E7]/30 bg-[#7EE7E7]/5 text-[#7EE7E7]' : 'border-[#8B5CF6]/20 bg-[#F3E8FF] text-[#7C3AED]'}`}>
-              <MapPin size={20} />
-              <span className="font-medium">India</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-current opacity-50"></span>
-              <Brain size={20} />
-              <span className="font-medium">AI/ML & Frontend</span>
-            </div>
+        {/* Projects Section */}
+        <section id="projects" className="py-20 border-t border-slate-800/50">
+          <div className="flex items-center mb-12">
+            <h2 className="text-3xl font-bold text-slate-100 mr-4 font-mono">{'<'}Hardware_Projects/{'>'}</h2>
+            <div className="flex-grow h-px bg-gradient-to-r from-emerald-900 to-transparent"></div>
           </div>
 
-          <div className="relative">
-            <div className={`absolute inset-0 bg-gradient-to-br ${mood === 'hacker' ? 'from-[#7EE7E7]/20 to-transparent' : 'from-[#8B5CF6]/20 to-[#EC4899]/20'} blur-3xl rounded-full opacity-60`}></div>
-            <div className={`
-              relative p-8 rounded-2xl border backdrop-blur-sm shadow-xl
-              ${mood === 'hacker' ? 'border-[#7EE7E7]/30 bg-black/40' : 'border-white bg-white/60'}
-            `}>
-              <div className="flex gap-2 mb-4">
-                 <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                 <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                 <div className="w-3 h-3 rounded-full bg-green-400"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <ProjectCard
+              title="Electrochromic Display"
+              date="Feb 2026 – Present"
+              description="Study and prototype development of low-power electrochromic display systems. Designing initial prototype for voltage-controlled color switching."
+              tags={['Electrochromism', 'Ion Transport', 'Optical Modulation']}
+            />
+             <ProjectCard
+              title="USB HID Macro Keypad"
+              date="Jan 2026 – Mar 2026"
+              description="RP2040-based keypad with OLED and macro layers. Designed custom PCB and implemented macros with an OLED display for dynamic feedback."
+              tags={['KiCad', 'CircuitPython', 'USB HID', 'RP2040']}
+            />
+            <ProjectCard
+              title="Wireless Weather Station"
+              date="Jan 2026 – Mar 2026"
+              description="ESP32-based system with a custom 2-layer PCB for real-time weather display. Fetches and displays live weather data on a TFT screen using REST APIs."
+              tags={['KiCad', 'Arduino/C++', 'ESP32', 'BME280', 'SPI TFT']}
+            />
+            <ProjectCard
+              title="Polystyrene Waste to Hydrocarbon"
+              date="Jan 2024 – Jul 2024"
+              description="Thermal and catalytic degradation of plastic waste. Successfully converted polystyrene into styrene, benzene, toluene, and xylene by optimizing reaction parameters."
+              tags={['Thermal cracking', 'Catalytic pyrolysis', 'Optimization']}
+            />
+          </div>
+        </section>
+
+        {/* Education & Leadership Section */}
+        <section id="timeline" className="py-20 border-t border-slate-800/50">
+          <div className="flex items-center mb-12">
+            <h2 className="text-3xl font-bold text-slate-100 mr-4 font-mono">{'<'}System_Logs/{'>'}</h2>
+            <div className="flex-grow h-px bg-gradient-to-r from-emerald-900 to-transparent"></div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Education */}
+            <div className="bg-slate-900/50 p-6 md:p-8 rounded-xl border border-slate-800">
+              <h3 className="text-xl font-mono text-emerald-400 mb-8 flex items-center border-b border-emerald-900/50 pb-4">
+                <GraduationCap className="w-5 h-5 mr-2"/> [Academics.exe]
+              </h3>
+              <div className="space-y-8 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-slate-800">
+                <TimelineItem
+                  title="B.Tech. in Electronics Engineering"
+                  subtitle="Rajiv Gandhi Institute of Petroleum Technology"
+                  date="2023 - 2027"
+                  details="CGPA: 6.39/10"
+                />
+                <TimelineItem
+                  title="Senior Secondary (Class XII)"
+                  subtitle="CBSE Board"
+                  date="2022"
+                  details="Percentage: 80.33%"
+                />
+                <TimelineItem
+                  title="Secondary (Class X)"
+                  subtitle="CBSE Board"
+                  date="2020"
+                  details="Percentage: 70.00%"
+                />
               </div>
-              <code className="text-sm block space-y-3 font-mono">
-                <span className={mood === 'hacker' ? 'text-[#B8A1FF]' : 'text-[#7C3AED]'}>class</span> <span className={mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#EC4899]'}>Ishita</span> <span className={mood === 'hacker' ? 'text-[#B8A1FF]' : 'text-[#7C3AED]'}>extends</span> Developer {'{'}
-                <div className="pl-6 space-y-1 mt-2">
-                  <div className="flex gap-2">
-                    <span className="text-gray-400">passion:</span>
-                    <span className="text-green-500">"Building meaningful AI"</span>,
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="text-gray-400">focus:</span>
-                    <span className="text-yellow-500">["NLP", "Healthcare", "UX"]</span>,
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="text-gray-400">vibe:</span>
-                    <span className="text-green-500">"Calm Confidence"</span>
-                  </div>
-                </div>
-                {'}'}
-              </code>
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      {/* Projects */}
-      <Section id="projects" title="Creations" mood={mood}>
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <ProjectCard
-            mood={mood}
-            project={{
-              title: "SANRAKSHA",
-              description: "AI-powered health monitoring dashboard using audio NLP to extract vitals and predict health risks. A fusion of empathy and engineering.",
-              stack: ["Python", "OpenAI Whisper", "Streamlit", "ML Models"],
-              awards: "Winner - CS BASE HackforHealth",
-              links: [{ url: "https://github.com/Ishita-Si/SanRaksha/tree/main", icon: "link" }]
-            }}
-          />
-          <ProjectCard
-            mood={mood}
-            project={{
-              title: "AI Cold Email Generator",
-              description: "Context-aware email generation engine. It parses resumes and job descriptions to craft perfectly tailored outreach using Groq LLMs.",
-              stack: ["LangChain", "ChromaDB", "Groq", "Streamlit"],
-              links: [{ url: "https://github.com/Ishita-Si/AI-Cold_Email-Generator", icon: "link" }]
-            }}
-          />
-          <ProjectCard
-            mood={mood}
-            project={{
-              title: "Global Climate Dashboard",
-              description: "Time-series forecasting of CO2 levels. Visualizing the planet's health with ARIMA models and interactive Plotly charts.",
-              stack: ["ARIMA", "Plotly", "Python", "Data Viz"],
-              links: [{ url: "https://github.com/Ishita-Si/Global-Climate-Change-Dashboard", icon: "link" }]
-            }}
-          />
-          <ProjectCard
-            mood={mood}
-            project={{
-              title: "Gemini Clone",
-              description: "A reimagined chat interface for the Gemini API. Built to explore the nuances of natural language interaction design.",
-              stack: ["React.js", "Tailwind", "Gemini API"],
-              links: [{ url: "https://cancan09-gemini.netlify.app/", icon: "link" }]
-            }}
-          />
-        </div>
-
-        {/* Explore More Link */}
-        <div className="flex justify-center">
-          <a
-            href={SOCIAL_LINKS.github}
-            target="_blank"
-            rel="noreferrer"
-            className={`
-              inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-300 group hover:-translate-y-1
-              ${mood === 'hacker' 
-                ? 'bg-[#121826] text-[#7EE7E7] border border-[#7EE7E7]/30 hover:bg-[#7EE7E7] hover:text-black' 
-                : 'bg-white text-[#8B5CF6] border border-[#F3E8FF] shadow-lg hover:shadow-[#B8A1FF]/40 hover:bg-[#8B5CF6] hover:text-white'}
-            `}
-          >
-            <Github size={20} />
-            Explore more projects on GitHub
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-          </a>
-        </div>
-      </Section>
-
-      {/* Skills Section - Fully Expanded */}
-      <Section id="skills" title="Tools I Trust" mood={mood}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-           <SkillCard
-             title="Languages"
-             icon={Code2}
-             mood={mood}
-             skills={["Python", "C++", "DSA", "JavaScript", "HTML5", "CSS", "SQL"]}
-           />
-           <SkillCard
-             title="AI & GenAI Core"
-             icon={Brain}
-             mood={mood}
-             skills={[
-               "Deep Learning", "NLP", "LLMs", "Generative AI",
-               "Computer Vision", "OpenAI Whisper", "Image Recognition",
-               "Object Detection", "Image Segmentation", "RAG",
-               "Agents", "Prompt Eng.", "Time-Series"
-             ]}
-           />
-           <SkillCard
-             title="ML Frameworks"
-             icon={Layers}
-             mood={mood}
-             skills={[
-               "PyTorch", "TensorFlow", "Keras", "Scikit-learn",
-               "LangChain", "ChromaDB", "OpenCV", "SpaCy"
-             ]}
-           />
-           <SkillCard
-             title="Data Science & Viz"
-             icon={BarChart}
-             mood={mood}
-             skills={[
-               "Pandas", "NumPy", "Plotly", "Matplotlib",
-               "Seaborn", "Folium", "EDA" , "SQL"
-             ]}
-           />
-           <SkillCard
-             title="Web Engineering"
-             icon={Layout}
-             mood={mood}
-             skills={[
-               "React.js", "Streamlit", "Tailwind CSS", "Bootstrap",
-               "Material UI", "Gemini API"
-             ]}
-           />
-           <SkillCard
-             title="Tools & Workflow"
-             icon={Wrench}
-             mood={mood}
-             skills={[
-               "Git/GitHub", "Linux", "Figma", "Canva",
-               "n8n", "MySQL", "Workflow Auto"
-             ]}
-           />
-        </div>
-      </Section>
-
-      {/* Education Section */}
-      <Section id="education" title="Education" mood={mood}>
-         <div className="space-y-8 max-w-4xl mx-auto">
-             {[
-               {
-                 institute: "Rajiv Gandhi Institute of Petroleum Technology (RGIPT)",
-                 degree: "Integrated Dual Degree (B.Tech + M.Tech) in CS & AI",
-                 duration: "2024 – 2029",
-                 desc: "Specializing in cutting-edge AI research and computer science fundamentals."
-               },
-               {
-                 institute: "M.I.S. International School",
-                 degree: "XII CBSE (Mathematics)",
-                 duration: "2022 – 2024",
-                 desc: "Built strong foundations in Calculus and Physics."
-               },
-               {
-                 institute: "Sunbeam School Ayodhya",
-                 degree: "X CBSE",
-                 duration: "2015 – 2022",
-                 desc: "Secondary education with a focus on science and logic."
-               }
-             ].map((edu, idx) => (
-                <div key={idx} className={`
-                   relative pl-8 border-l-2 transition-all duration-300 group
-                   ${mood === 'hacker' ? 'border-[#7EE7E7]/20 hover:border-[#7EE7E7]' : 'border-gray-200 hover:border-[#8B5CF6]'}
-                `}>
-                   {/* Dot on Timeline */}
-                   <span className={`
-                     absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 transition-all duration-300
-                     ${mood === 'hacker' 
-                       ? 'border-[#0E0E11] bg-[#7EE7E7] group-hover:scale-125 group-hover:shadow-[0_0_10px_#7EE7E7]' 
-                       : 'border-white bg-[#8B5CF6] group-hover:scale-125 group-hover:shadow-lg'}
-                   `}></span>
-
-                   <div className={`
-                     p-6 rounded-2xl border transition-all duration-300 ml-4
-                     ${mood === 'hacker' 
-                       ? 'bg-[#121826] border-[#7EE7E7]/10 group-hover:border-[#7EE7E7]/40 group-hover:bg-[#1A2333]' 
-                       : 'bg-white border-gray-100 group-hover:border-[#8B5CF6]/30 group-hover:shadow-lg shadow-sm'}
-                   `}>
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
-                        <h3 className={`text-xl font-bold ${mood === 'hacker' ? 'text-white' : 'text-gray-900'}`}>{edu.institute}</h3>
-                        <span className={`text-sm font-mono px-3 py-1 rounded-full w-fit ${mood === 'hacker' ? 'bg-[#7EE7E7]/10 text-[#7EE7E7]' : 'bg-[#F3E8FF] text-[#7C3AED]'}`}>
-                          {edu.duration}
-                        </span>
-                      </div>
-                      <h4 className={`text-lg font-medium mb-2 ${mood === 'hacker' ? 'text-gray-300' : 'text-[#8B5CF6]'}`}>{edu.degree}</h4>
-                      <p className={`text-sm ${mood === 'hacker' ? 'text-gray-400' : 'text-gray-600'}`}>{edu.desc}</p>
-                   </div>
-                </div>
-             ))}
-         </div>
-      </Section>
-
-      {/* Experience & Recognition */}
-      <Section id="experience" title="Where I've Built" mood={mood}>
-        <div className="grid md:grid-cols-2 gap-16">
-          {/* Experience */}
-          <div className="space-y-10">
-            <div className="flex items-center gap-4">
-              <Layers className={mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'} />
-              <h3 className={`text-2xl font-bold ${mood === 'hacker' ? 'text-gray-200' : 'text-gray-900'}`}>Experience</h3>
             </div>
 
-            <div className={`relative pl-8 border-l-2 ${mood === 'hacker' ? 'border-[#7EE7E7]/30' : 'border-[#8B5CF6]/30'}`}>
-              <span className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 ${mood === 'hacker' ? 'border-[#050505] bg-[#7EE7E7]' : 'border-[#FDFCFE] bg-[#8B5CF6]'}`}></span>
-
-              <div className="mb-1 text-sm font-semibold tracking-wide uppercase opacity-50">2024 - Present</div>
-              <h4 className={`text-xl font-bold mb-2 ${mood === 'hacker' ? 'text-white' : 'text-gray-900'}`}>Yapassio Pvt. Ltd.</h4>
-              <div className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-4 ${mood === 'hacker' ? 'bg-[#7EE7E7]/10 text-[#7EE7E7]' : 'bg-[#F3E8FF] text-[#7C3AED]'}`}>R&D Intern</div>
-              <p className="opacity-80 leading-relaxed">
-                Spearheading knowledge base creation and domain mapping. Conducting early-stage research to build scalable, intelligent AI systems.
-              </p>
+            {/* PORs */}
+            <div className="bg-slate-900/50 p-6 md:p-8 rounded-xl border border-slate-800">
+              <h3 className="text-xl font-mono text-amber-400 mb-8 flex items-center border-b border-amber-900/50 pb-4">
+                <Briefcase className="w-5 h-5 mr-2"/> [Leadership_Modules]
+              </h3>
+              <div className="space-y-8 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-slate-800">
+                <TimelineItem
+                  title="Treasurer"
+                  subtitle="IEEE Student Branch, RGIPT"
+                  date="Oct 2025 – Present"
+                  variant="amber"
+                />
+                <TimelineItem
+                  title="Audit and Reporting Head"
+                  subtitle="IEEE Student Branch, RGIPT"
+                  date="Oct 2024 – Oct 2025"
+                  variant="amber"
+                />
+                <TimelineItem
+                  title="Audit and Reporting Executive"
+                  subtitle="IEEE Student Branch, RGIPT"
+                  date="Oct 2023 – Oct 2024"
+                  variant="amber"
+                />
+              </div>
             </div>
           </div>
+        </section>
 
-          {/* Awards */}
-          <div className="space-y-8">
-            <div className="flex items-center gap-4">
-              <Award className={mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'} />
-              <h3 className={`text-2xl font-bold ${mood === 'hacker' ? 'text-gray-200' : 'text-gray-900'}`}>Recognition</h3>
-            </div>
-
-            <div className="space-y-4">
-              {[
-                "CS BASE HackforHealth Winner (Advanced Tier)",
-                "Hack for Humanity Winner",
-                "IEEE Data Visualization Challenge",
-                "She Builds Hackathon Finalist"
-              ].map((award, i) => (
-                <div
-                  key={i}
-                  className={`
-                    p-4 rounded-xl transition-all hover:translate-x-2 flex items-center gap-4
-                    ${mood === 'hacker' 
-                      ? 'bg-[#121826] border border-[#7EE7E7]/10 hover:border-[#7EE7E7]/30' 
-                      : 'bg-white border border-gray-100 shadow-sm hover:shadow-md'}
-                  `}
-                >
-                  <div className={`p-2 rounded-full ${mood === 'hacker' ? 'bg-[#7EE7E7]/10 text-[#7EE7E7]' : 'bg-[#F3E8FF] text-[#8B5CF6]'}`}>
-                    <Award size={18} />
-                  </div>
-                  <span className={`font-medium ${mood === 'hacker' ? 'text-gray-300' : 'text-gray-700'}`}>{award}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Section>
-
-       {/* Community */}
-       <Section id="community" title="Community" mood={mood}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            { role: "Computer Society Head", org: "IEEE Student Branch" },
-            { role: "ML Coordinator", org: "S&T Kode Club" },
-            { role: "Volunteer", org: "Arpan Social Club" },
-            { role: "Campus Ambassador", org: "GirlScript Summer of Code" },
-            { role: "Member", org: "Rewriting the Code" },
-            { role: "Member", org: "Women Techmakers" },
-            { role: "Apprentice", org: "SheFi" },
-            { role: "Fellow", org: "DoraDAO" },
-          ].map((comm, i) => (
-             <div key={i} className={`
-                p-6 rounded-2xl border transition-all hover:-translate-y-1
-                ${mood === 'hacker' 
-                  ? 'bg-[#121826] border-[#7EE7E7]/20 hover:border-[#7EE7E7]/50' 
-                  : 'bg-white border-gray-100 shadow-sm hover:shadow-lg hover:border-[#8B5CF6]/30'}
-             `}>
-                <h4 className={`font-bold mb-1 ${mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#7C3AED]'}`}>{comm.role}</h4>
-                <p className={`text-sm ${mood === 'hacker' ? 'text-gray-400' : 'text-gray-500'}`}>{comm.org}</p>
-             </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* Footer / Contact */}
-      <footer className={`py-24 border-t mt-20 text-center relative overflow-hidden ${mood === 'hacker' ? 'bg-[#000] border-[#7EE7E7]/20' : 'bg-gray-50 border-gray-200'}`}>
-        <div className="container mx-auto px-6 relative z-10">
-          <h2 className={`text-4xl md:text-6xl font-bold mb-10 ${mood === 'hacker' ? 'text-white' : 'text-gray-900'}`}>Let's Build Something.</h2>
-
-          <div className="flex flex-col md:flex-row justify-center gap-6 mb-16">
-             <a href="mailto:ishitasingh.work@gmail.com" className={`flex items-center justify-center gap-2 px-8 py-4 rounded-full border transition-all hover:scale-105 clickable ${mood === 'hacker' ? 'border-[#7EE7E7] text-[#7EE7E7] hover:bg-[#7EE7E7] hover:text-black' : 'border-[#8B5CF6] text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white bg-white'}`}>
-                <Mail size={20} /> Send an Email
-             </a>
-             <a href={SOCIAL_LINKS.linkedin} target="_blank" className={`flex items-center justify-center gap-2 px-8 py-4 rounded-full border transition-all hover:scale-105 clickable ${mood === 'hacker' ? 'border-[#7EE7E7] text-[#7EE7E7] hover:bg-[#7EE7E7] hover:text-black' : 'border-gray-300 text-gray-700 hover:bg-black hover:text-white bg-white'}`}>
-                <Linkedin size={20} /> LinkedIn
-             </a>
+        {/* Achievements Section */}
+        <section id="achievements" className="py-20 border-t border-slate-800/50">
+          <div className="flex items-center mb-12">
+            <h2 className="text-3xl font-bold text-slate-100 mr-4 font-mono">{'<'}Milestones/{'>'}</h2>
+            <div className="flex-grow h-px bg-gradient-to-r from-emerald-900 to-transparent"></div>
           </div>
 
-          <div className="text-sm opacity-50 flex flex-col items-center gap-3">
-            <p className={mood === 'hacker' ? 'text-gray-500' : 'text-gray-500'}>© {new Date().getFullYear()} Ishita Singh.</p>
-            <p className="flex items-center gap-2">
-              Built with curiosity, care, and a little cat energy
-              <Cat size={16} className={mood === 'hacker' ? 'text-[#7EE7E7]' : 'text-[#8B5CF6]'} />
-            </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AchievementCard
+              title="Smart India Hackathon 2024"
+              award="National Finalist"
+              description="Recognized as a national finalist for developing an innovative hardware solution."
+            />
+            <AchievementCard
+              title="Kode-Kurrent Hackathon 2025"
+              award="Top 3 Teams"
+              description="Ranked among the top 3 teams for building a sophisticated crypto trading bot."
+            />
+            <AchievementCard
+              title="Hydraulic Arm Challenge 2024"
+              award="1st Position"
+              description="Secured 1st position at Urjotsav, RGIPT's annual technical fest."
+            />
           </div>
-        </div>
+        </section>
+
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-800 bg-[#0B1120] py-8 text-center text-slate-500 text-sm font-mono relative z-10">
+        <p>Built with React & Tailwind CSS.</p>
+        <p className="mt-2">© {new Date().getFullYear()} Karan Pratap Singh. System Offline.</p>
       </footer>
     </div>
   );
-};
+}
 
-export default App;
+// Components
+
+function SkillCard({ icon, title, skills }) {
+  return (
+    <div className="bg-slate-900 border-t-2 border-emerald-500/50 border-x border-b border-x-slate-800 border-b-slate-800 p-6 rounded-b-xl hover:border-emerald-500 transition-colors shadow-lg">
+      <div className="flex items-center mb-4">
+        <div className="p-2 bg-slate-950 rounded-md border border-slate-800 mr-3">
+          {icon}
+        </div>
+        <h3 className="text-lg font-mono font-semibold text-slate-200">{title}</h3>
+      </div>
+      <ul className="flex flex-wrap gap-2">
+        {skills.map((skill, index) => (
+          <li key={index} className="px-3 py-1 bg-[#0B1120] text-slate-300 text-xs font-mono border border-slate-800 rounded">
+            {skill}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ProjectCard({ title, date, description, tags }) {
+  return (
+    <div className="group relative bg-slate-900 border border-slate-800 p-6 rounded-xl hover:border-emerald-500/50 transition-all hover:-translate-y-1 overflow-hidden">
+      {/* Decorative traces corner */}
+      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-emerald-900/20 to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-emerald-500/30 rounded-tr-xl pointer-events-none" />
+
+      <div className="flex justify-between items-start mb-4 relative z-10">
+        <h3 className="text-xl font-bold text-slate-200 group-hover:text-emerald-400 transition-colors">{title}</h3>
+        <span className="text-xs font-mono text-amber-400 bg-amber-400/10 px-2 py-1 rounded border border-amber-400/20">{date}</span>
+      </div>
+      <p className="text-slate-400 mb-6 text-sm leading-relaxed relative z-10">{description}</p>
+      <div className="flex flex-wrap gap-2 mt-auto relative z-10">
+        {tags.map((tag, index) => (
+          <span key={index} className="text-xs font-mono text-slate-400 flex items-center bg-slate-950 px-2 py-1 rounded border border-slate-800">
+            <ChevronRight className="w-3 h-3 text-emerald-500 mr-1"/> {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TimelineItem({ title, subtitle, date, details, variant = 'emerald' }) {
+  const dotColor = variant === 'emerald' ? 'border-emerald-500 bg-emerald-950 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'border-amber-500 bg-amber-950 shadow-[0_0_10px_rgba(245,158,11,0.5)]';
+  const dateColor = variant === 'emerald' ? 'text-emerald-400' : 'text-amber-400';
+
+  return (
+    <div className="relative pl-8 md:pl-0">
+      <div className="md:flex items-center justify-between md:mb-2">
+        {/* Timeline Node */}
+        <div className={`absolute left-0 top-1.5 md:left-1/2 md:-ml-2 w-4 h-4 rounded-full border-2 z-10 ${dotColor}`}></div>
+
+        <div className="md:w-[45%] md:text-right md:pr-8 mb-2 md:mb-0">
+          <h4 className="text-lg font-bold text-slate-200">{title}</h4>
+          <span className={`text-sm font-mono ${dateColor}`}>{date}</span>
+        </div>
+
+        <div className="md:w-[45%] md:pl-8">
+          <p className="text-slate-300 font-medium">{subtitle}</p>
+          {details && <p className="text-slate-500 text-sm mt-1">{details}</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AchievementCard({ title, award, description }) {
+  return (
+    <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl relative overflow-hidden group hover:border-amber-500/50 transition-colors">
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <Award className="absolute -right-4 -top-4 w-24 h-24 text-slate-800/50 -rotate-12 group-hover:text-amber-900/30 transition-colors" />
+      <div className="relative z-10">
+        <span className="inline-block px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono font-bold rounded mb-3 tracking-wider">
+          {award}
+        </span>
+        <h3 className="text-lg font-bold text-slate-200 mb-2">{title}</h3>
+        <p className="text-slate-400 text-sm">{description}</p>
+      </div>
+    </div>
+  );
+}
